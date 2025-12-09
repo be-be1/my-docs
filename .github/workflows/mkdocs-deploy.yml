@@ -5,13 +5,13 @@ on:
     branches: ["master"]
   workflow_dispatch:
 
-permission:
+permissions:
   contents: read
   pages: write
-  id_token: write
+  id-token: write
 
 concurrency:
-  groups: "pages"
+  group: "pages"
   cancel-in-progress: true
 
 jobs:
@@ -36,7 +36,7 @@ jobs:
          run: uv venv
 
        - name: Install MKDocs and plugins
-         run:
+         run: |
            uv pip install --upgrade mkdocs mkdocs-material mkdocstrings[python] pillow cairosvg
 
        - name: Build site (_site directory name is used for Jekyll compatibility)
@@ -45,17 +45,16 @@ jobs:
        - name: Upload artifact
          uses: actions/upload-pages-artifact@v3
          with:
-          path: ./_site
-
-deploy:
-  needs: build
-  runs-on: ubuntu-latest
-  environment:
-    name: github-pages
-  steps:
-    - name: Deploy to GitHub Pages
-      id: deployment
-      uses: actions/deploy-pages@v4
+          path: ./_site 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 
 
 
